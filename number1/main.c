@@ -59,9 +59,6 @@ int main(int argc, char *argv[], char *envp[]) {
     int long_opt;
     struct rlimit lim;
 
-
-
-
     while ((opt = getopt_long(argc, argv, short_options, long_param, &long_opt)) != -1) {
         switch (opt) {
             case 'i':
