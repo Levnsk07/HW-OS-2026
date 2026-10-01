@@ -21,24 +21,37 @@ List *addNode(List *list, char *data, int size);
 
 void printList(List *list);
 
+// =======================================
+
 int main(int argc, char *argv[]) {
+
+    printf("wright some lines, for exit wright {.} in start: \n");
+
     List *list = newList();
     char *buffer = malloc(sizeof(char) * 1024);
     fgets(buffer, 1024, stdin);
+    buffer[1023] = '\0';
     while (buffer[0] != '.') {
+        int sise = strlen(buffer);
         list = addNode(list, buffer, strlen(buffer));
+
         fgets(buffer, 1024, stdin);
+        buffer[1023] = '\0';
     }
 
+    system("clear");
+
+
+    // printf("\n========================\n");
     printList(list);
 
     return 0;
 }
 
-
 // =======================================
 
 void printList(List *list) {
+
     if (list == NULL) return;
     if (list->head == NULL) return;
     Node *current = list->head;
