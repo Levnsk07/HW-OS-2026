@@ -8,6 +8,7 @@
 int main(int argc, char *argv[]) {
     const struct termios oldSetting;
     tcgetattr(STDIN_FILENO, &oldSetting);
+
     struct termios newSetting = oldSetting;
 
 
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
 
     tcsetattr(STDIN_FILENO, TCSANOW, &newSetting);
 
-    printf("continue (y/n) ");
+    printf("continue? (y/n) ");
 
     char result;
     scanf("%c", &result);
@@ -32,6 +33,6 @@ int main(int argc, char *argv[]) {
     if (result != 'y') printf("Stop\n");
 
     tcsetattr(STDIN_FILENO, TCSANOW, &oldSetting);
-
+    printf("\n");
     return 0;
 }
