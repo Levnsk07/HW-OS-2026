@@ -1,92 +1,66 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
+#include <unistd.h>
 
-typedef struct Node {
-    char *data;
-    struct Node *next;
-} Node;
+#include "MyList.c"
 
-typedef struct List {
-    Node *head;
-    Node *tail;
-} List;
+#define LINE_SIZE 4096
 
 
-List *newList();
+void replace_escape_sequences(char *str) {
+    char temp[LINE_SIZE];
+    int i = 0;
+    int j = 0;
+    int len = strlen(str);
+    while (i < len) {
+        if (str[i] == '\033' && (i + 1) < len && str[i + 1] == '[') {
+            const char *marker = "{COM}";
+            int marker_len = strlen(marker);
+            for (int m = 0; m < marker_len; m++) {
+                temp[j++] = marker[m];
+            }
+            i += 2;
+            while (i < len && (str[i] < 0x40 || str[i] > 0x7E)) {
+                i++;
+            }
+            if (i < len) {
+                i++;
+            }
+        } else {
+            temp[j++] = str[i++];
+        }
+    }
+    temp[j] = '\0';
+    strcpy(str, temp);
+}
 
-Node *newNode(char *data, int size);
-
-List *addNode(List *list, char *data, int size);
-
-void printList(List *list);
-
-// =======================================
 
 int main(int argc, char *argv[]) {
-
     printf("wright some lines, for exit wright {.} in start: \n");
 
     List *list = newList();
-    char *buffer = malloc(sizeof(char) * 1024);
-    fgets(buffer, 1024, stdin);
-    buffer[1023] = '\0';
-    while (buffer[0] != '.') {
-        int sise = strlen(buffer);
-        list = addNode(list, buffer, strlen(buffer));
+    char *buffer = malloc(sizeof(char) * LINE_SIZE);
 
-        fgets(buffer, 1024, stdin);
-        buffer[1023] = '\0';
+    fgets(buffer, LINE_SIZE, stdin);
+    buffer[1023] = '\0';
+    replace_escape_sequences(buffer);
+
+    while (buffer[0] != '.') {
+        int size = strlen(buffer);
+        list = addNode(list, buffer, size);
+
+        fgets(buffer, LINE_SIZE, stdin);
+        buffer[LINE_SIZE - 1] = '\0';
+        replace_escape_sequences(buffer);
     }
 
-    system("clear");
+    free(buffer);
+    fclose(stdin);
 
-
-    // printf("\n========================\n");
+    printf("\n ========== \t OUTPUT \t ========== \n");
     printList(list);
 
     return 0;
-}
-
-// =======================================
-
-void printList(List *list) {
-
-    if (list == NULL) return;
-    if (list->head == NULL) return;
-    Node *current = list->head;
-    do {
-        printf("%s", current->data);
-        current = current->next;
-    } while (current != NULL);
-}
-
-List *newList() {
-    List *list;
-    list = (List *) malloc(sizeof(List));
-    list->head = NULL;
-    list->tail = list->head;
-    return list;
-}
-
-Node *newNode(char *data, int size) {
-    Node *node;
-    node = (Node *) malloc(sizeof(Node));
-    node->data = malloc((size + 1) * sizeof(char));
-
-    strcpy(node->data, data);
-
-    node->next = NULL;
-    return node;
-}
-
-List *addNode(List *list, char *data, int size) {
-    if (list->tail == NULL) {
-        list->head = newNode(data, size);
-        list->tail = list->head;
-        return list;
-    }
-    list->tail->next = newNode(data, size);
-    list->tail = list->tail->next;
-    return list;
 }
