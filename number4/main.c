@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
     List *list = newList();
     char *buffer = malloc(sizeof(char) * LINE_SIZE);
 
+
     fgets(buffer, LINE_SIZE, stdin);
     buffer[1023] = '\0';
     replace_escape_sequences(buffer);
