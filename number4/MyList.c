@@ -3,15 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct Node {
-    char *data;
-    struct Node *next;
-} Node;
-
-typedef struct List {
-    Node *head;
-    Node *tail;
-} List;
+// typedef struct Node {
+//     char *data;
+//     struct Node *next;
+// } Node;
+//
+// typedef struct List {
+//     Node *head;
+//     Node *tail;
+// } List;
 
 
 List *newList() {
