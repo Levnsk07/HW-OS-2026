@@ -4,10 +4,9 @@
 #include <termios.h>
 #include <unistd.h>
 
-#include "MyList.c"
+#include "MyList.h"
 
 #define LINE_SIZE 4096
-
 
 void replace_escape_sequences(char *str) {
     char temp[LINE_SIZE];
@@ -38,7 +37,7 @@ void replace_escape_sequences(char *str) {
 
 
 int main(int argc, char *argv[]) {
-    printf("wright some lines, for exit wright {.} in start: \n");
+    printf("write some lines, for exit write {.} in start: \n");
 
     List *list = newList();
     char *buffer = malloc(sizeof(char) * LINE_SIZE);
