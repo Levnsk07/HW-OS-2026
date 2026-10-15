@@ -7,7 +7,7 @@
 int main(int argc, char *argv[])
 {
     FILE *fp;
-    const char *filename = "data.txt";
+    const char *filename = "secret.txt";
 
     if (argc > 1) filename = argv[1];
 
