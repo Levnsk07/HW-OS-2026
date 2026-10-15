@@ -1,46 +1,46 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
-
-void print_ids(void)
-{
-    printf("real uid = %ld, effective uid = %ld\n",
-           (long)getuid(), (long)geteuid());
-}
-
-void try_open(const char *filename)
-{
-    FILE *file = fopen(filename, "r+");
-
-    if (file == NULL) {
-        perror("fopen");
-    } else {
-        printf("fopen: success\n");
-        fclose(file);
-    }
-}
+#include <sys/types.h>
+#include <errno.h>
 
 int main(int argc, char *argv[])
 {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s file\n", argv[0]);
-        return 1;
+    FILE *fp;
+    const char *filename = "secret.txt";
+
+    if (argc > 1) filename = argv[1];
+
+    printf("Real UID:      %d\n", getuid());
+    printf("Effective UID: %d\n", geteuid());
+    printf("Real GID:      %d\n", getgid());
+    printf("Effective GID: %d\n", getegid());
+
+    printf("\nTrying to open '%s'...\n", filename);
+    fp = fopen(filename, "r");
+    if (fp == NULL) perror("fopen");
+    else 
+    {
+        printf("File opened successfully.\n");
+        fclose(fp);
     }
 
-    /* ûÁÇÉ 1-2 */
-    printf("Before setuid:\n");
-    print_ids();
-    try_open(argv[1]);
+    printf("\nCalling setuid(getuid())...\n");
+    if (setuid(getuid()) == -1) perror("setuid");
 
-    /* ûÁÇ 3 */
-    if (setuid(getuid()) == -1) {
-        perror("setuid");
-        return 1;
+    printf("Real UID:      %d\n", getuid());
+    printf("Effective UID: %d\n", geteuid());
+
+    printf("\nTrying to open '%s' again...\n", filename);
+    fp = fopen(filename, "r");
+    if (fp == NULL) perror("fopen");
+    else 
+    {
+        printf("File opened successfully.\n");
+        fclose(fp);
     }
-
-    /* ûÁÇ 4 */
-    printf("\nAfter setuid:\n");
-    print_ids();
-    try_open(argv[1]);
 
     return 0;
 }
+
+
