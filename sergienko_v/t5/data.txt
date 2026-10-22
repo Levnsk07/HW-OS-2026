@@ -1,0 +1,7 @@
+Test file for tasks
+hello
+task5  &  task6
+ file  txt
+data
+
+jjj
