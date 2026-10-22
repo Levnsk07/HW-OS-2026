@@ -1,0 +1,9 @@
+
+# Compiled programs
+/[0-9]
+/[0-9][0-9]
+*.o
+.DS_Store
+
+/task*/[0-9]
+/task*/[0-9][0-9]
